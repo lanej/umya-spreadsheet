@@ -7,6 +7,7 @@ use crate::structs::ColumnFields;
 use crate::structs::ColumnItems;
 use crate::structs::DataFields;
 use crate::structs::Location;
+use crate::structs::PageFields;
 use crate::structs::PivotFields;
 use crate::structs::PivotTableStyle;
 use crate::structs::RowItems;
@@ -42,6 +43,7 @@ pub struct PivotTableDefinition {
     location: Location,
     pivot_fields: PivotFields,
     row_items: RowItems,
+    page_fields: PageFields,
     column_fields: ColumnFields,
     column_items: ColumnItems,
     data_fields: DataFields,
@@ -306,6 +308,22 @@ impl PivotTableDefinition {
     }
 
     #[inline]
+    pub fn get_page_fields(&self) -> &PageFields {
+        &self.page_fields
+    }
+
+    #[inline]
+    pub fn get_page_fields_mut(&mut self) -> &mut PageFields {
+        &mut self.page_fields
+    }
+
+    #[inline]
+    pub fn set_page_fields(&mut self, value: PageFields) -> &mut Self {
+        self.page_fields = value;
+        self
+    }
+
+    #[inline]
     pub fn get_column_fields(&self) -> &ColumnFields {
         &self.column_fields
     }
@@ -448,6 +466,11 @@ impl PivotTableDefinition {
                     obj.set_attributes(reader, e);
                     self.set_row_items(obj);
                 }
+                if e.name().into_inner() == b"pageFields" {
+                    let mut obj = PageFields::default();
+                    obj.set_attributes(reader, e);
+                    self.set_page_fields(obj);
+                }
                 if e.name().into_inner() == b"colFields" {
                     let mut obj = ColumnFields::default();
                     obj.set_attributes(reader, e);
@@ -574,6 +597,9 @@ impl PivotTableDefinition {
 
         // rowItems
         self.row_items.write_to(writer);
+
+        // pageFields
+        self.page_fields.write_to(writer);
 
         // colFields
         self.column_fields.write_to(writer);

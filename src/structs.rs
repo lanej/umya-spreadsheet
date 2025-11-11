@@ -467,6 +467,9 @@ pub use self::row_item::*;
 mod column_fields;
 pub use self::column_fields::*;
 
+mod page_fields;
+pub use self::page_fields::*;
+
 mod field;
 pub use self::field::*;
 
